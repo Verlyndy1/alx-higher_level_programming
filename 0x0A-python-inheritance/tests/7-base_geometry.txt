@@ -1,202 +1,133 @@
-''' 
- # Import the required class 
- >>> from importlib import import_module 
- >>> BaseGeometry = import_module('7-base_geometry').BaseGeometry 
-  
- >>> class TestInt(int): 
- ...     pass 
- >>> g = BaseGeometry() 
- >>> type(g) 
- <class '7-base_geometry.BaseGeometry'> 
- >>> g.__class__.__name__ 
- 'BaseGeometry' 
- >>> 'integer_validator' in dir(g) 
- True 
- >>> 'area' in dir(g) 
- True 
- >>> type(g.integer_validator) 
- <class 'method'> 
- >>> type(g.area) 
- <class 'method'> 
- >>> g.integer_validator('foo', 2) 
- >>> g.integer_validator('foo', 278) 
- >>> g.integer_validator('foo', int('278')) 
- >>> g.integer_validator('foo', int('bead', 16)) 
- >>> g.integer_validator(b'foo', 278) 
- >>> g.integer_validator(0x666f6f, 278) 
- >>> g.integer_validator([0x666f6f], 278) 
-  
- >>> try: 
- ...     g = BaseGeometry() 
- ...     g.area() 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [Exception] area() is not implemented 
- >>> try: 
- ...     g = BaseGeometry() 
- ...     g.area(7) 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [TypeError] area() takes 1 positional argument but 2 were given 
- >>> try: 
- ...     g = BaseGeometry() 
- ...     g.area(g) 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [TypeError] area() takes 1 positional argument but 2 were given 
- >>> try: 
- ...     g = BaseGeometry() 
- ...     g.area(None) 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [TypeError] area() takes 1 positional argument but 2 were given 
-  
- >>> try: 
- ...     g = BaseGeometry() 
- ...     g.integer_validator('size', None) 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [TypeError] size must be an integer 
- >>> try: 
- ...     g = BaseGeometry() 
- ...     g.integer_validator(None, None) 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [TypeError] unsupported format string passed to NoneType.__format__ 
- >>> try: 
- ...     g = BaseGeometry() 
- ...     g.integer_validator('height', int) 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [TypeError] height must be an integer 
- >>> try: 
- ...     g = BaseGeometry() 
- ...     g.integer_validator('foo', '23') 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [TypeError] foo must be an integer 
- >>> try: 
- ...     g = BaseGeometry() 
- ...     g.integer_validator('foo', True) 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [TypeError] foo must be an integer 
- >>> try: 
- ...     g = BaseGeometry() 
- ...     g.integer_validator('foo', False) 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [TypeError] foo must be an integer 
- >>> try: 
- ...     g = BaseGeometry() 
- ...     g.integer_validator('foo', b'2') 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [TypeError] foo must be an integer 
- >>> try: 
- ...     g = BaseGeometry() 
- ...     g.integer_validator('foo', 2.7) 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [TypeError] foo must be an integer 
- >>> try: 
- ...     g = BaseGeometry() 
- ...     g.integer_validator('foo', 2.0) 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [TypeError] foo must be an integer 
- >>> try: 
- ...     g = BaseGeometry() 
- ...     g.integer_validator('foo', float('inf')) 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [TypeError] foo must be an integer 
- >>> try: 
- ...     g = BaseGeometry() 
- ...     g.integer_validator('foo', float('-inf')) 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [TypeError] foo must be an integer 
- >>> try: 
- ...     g = BaseGeometry() 
- ...     g.integer_validator('foo', float('nan')) 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [TypeError] foo must be an integer 
- >>> try: 
- ...     g = BaseGeometry() 
- ...     g.integer_validator('foo', [5]) 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [TypeError] foo must be an integer 
- >>> try: 
- ...     g = BaseGeometry() 
- ...     n = TestInt(34) 
- ...     g.integer_validator('foo', n) 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [TypeError] foo must be an integer 
- >>> try: 
- ...     g = BaseGeometry() 
- ...     g.integer_validator('foo', g) 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [TypeError] foo must be an integer 
- >>> try: 
- ...     g = BaseGeometry() 
- ...     g.integer_validator('angle', complex(2, 3)) 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [TypeError] angle must be an integer 
- >>> try: 
- ...     g = BaseGeometry() 
- ...     g.integer_validator('angle', 0.0) 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [TypeError] angle must be an integer 
-  
- >>> try: 
- ...     g = BaseGeometry() 
- ...     g.integer_validator('foo', 0) 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [ValueError] foo must be greater than 0 
- >>> try: 
- ...     g = BaseGeometry() 
- ...     g.integer_validator('foo', -12) 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [ValueError] foo must be greater than 0 
-  
- >>> try: 
- ...     g = BaseGeometry() 
- ...     g.integer_validator('foo') 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [TypeError] integer_validator() missing 1 required positional argument: 'value' 
- >>> try: 
- ...     g = BaseGeometry() 
- ...     g.integer_validator() 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [TypeError] integer_validator() missing 2 required positional arguments: 'name' and 'value' 
- >>> try: 
- ...     g = BaseGeometry() 
- ...     g.integer_validator('foo', 2, 5) 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [TypeError] integer_validator() takes 3 positional arguments but 4 were given 
- >>> try: 
- ...     g = BaseGeometry(7) 
- ...     g.integer_validator('foo', 5) 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [TypeError] BaseGeometry() takes no arguments 
- >>> try: 
- ...     g = BaseGeometry(None) 
- ...     g.integer_validator('foo', 5) 
- ... except Exception as ex: 
- ...     print('[{}] {}'.format(ex.__class__.__name__, ex.args[0])) 
- [TypeError] BaseGeometry() takes no arguments 
-  
- '''
+========================================
+  Documentation of 7-base_geometry.py
+========================================
+
+Contains a `BaseGeometry` class with the following methods
+
+`def area(self):`
+
+which calculates the area of the `BaseGeometry`
+
+`def integer_validator(self, name, value):`
+
+validates the `value` based
+
+Test cases
+==========
+
+>>> BaseGeometry = __import__('7-base_geometry').BaseGeometry
+>>> bg = BaseGeometry()
+
+Case with a positive value
+
+>>> bg.integer_validator("my_int", 12)
+>>>
+
+Case with a negative value
+
+>>> bg.integer_validator("distance", -4)
+Traceback (most recent call last):
+ValueError: distance must be greater than 0
+
+Case with a float
+
+>>> bg.integer_validator("year", 8.5)
+Traceback (most recent call last):
+TypeError: year must be an integer
+
+Case with zero
+
+>>> bg.integer_validator("age", 0)
+Traceback (most recent call last):
+ValueError: age must be greater than 0
+
+Case with a non integer
+
+>>> bg.integer_validator("name", "A!ex")
+Traceback (most recent call last):
+TypeError: name must be an integer
+
+Case with value as boolean
+
+>>> bg.integer_validator("width", True)
+Traceback (most recent call last):
+TypeError: width must be an integer
+
+Case catched output with string value
+
+>>> try:
+...     bg.integer_validator("name", "John")
+... except Exception as e:
+...     print("[{}] {}".format(e.__class__.__name__, e))
+...
+[TypeError] name must be an integer
+
+Case catched output with 0 as value
+
+>>> try:
+...     bg.integer_validator("age", 0)
+... except Exception as e:
+...     print("[{}] {}".format(e.__class__.__name__, e))
+...
+[ValueError] age must be greater than 0
+
+Case with negative value
+
+>>> try:
+...     bg.integer_validator("distance", -4)
+... except Exception as e:
+...     print("[{}] {}".format(e.__class__.__name__, e))
+...
+[ValueError] distance must be greater than 0
+
+Case with float value
+
+>>> try:
+...     bg.integer_validator("distance", 4.5)
+... except Exception as e:
+...     print("[{}] {}".format(e.__class__.__name__, e))
+...
+[TypeError] distance must be an integer
+
+Case with calling area function
+
+>>> bg.integer_validator("my_int", 12)
+>>> bg.area()
+Traceback (most recent call last):
+Exception: area() is not implemented
+
+Case with None as value
+
+>>> bg.integer_validator("age", None)
+Traceback (most recent call last):
+TypeError: age must be an integer
+
+Case without any arguments
+
+>>> bg.integer_validator()
+Traceback (most recent call last):
+TypeError: integer_validator() missing 2 required positional arguments: 'name' and 'value'
+
+Case without value
+
+>>> bg.integer_validator("year")
+Traceback (most recent call last):
+TypeError: integer_validator() missing 1 required positional argument: 'value'
+
+Case with an array as value
+
+>>> bg.integer_validator("day", [7, 3, 5])
+Traceback (most recent call last):
+TypeError: day must be an integer
+
+Case with a tuple
+
+>>> bg.integer_validator("day", (7, 3, 5))
+Traceback (most recent call last):
+TypeError: day must be an integer
+
+Case with a dictionary
+
+>>> bg.integer_validator("month", {"Jan", "Feb", "Mar"})
+Traceback (most recent call last):
+TypeError: month must be an integer
